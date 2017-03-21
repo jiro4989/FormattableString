@@ -74,16 +74,6 @@ public class FormattableText {
           }
         }
         newListList.add(newList);
-        //AtomicInteger atom = new AtomicInteger(0);
-        //l.stream().forEach(s -> {
-        //  int count = atom.incrementAndGet();
-        //  newList.add(s);
-        //  if (4 <= count) {
-        //    newListList.add(newList);
-        //    atom.set(0);
-        //    newList.clear();
-        //  }
-        //});
       }
     });
 
