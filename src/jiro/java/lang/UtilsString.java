@@ -246,7 +246,6 @@ public class UtilsString {
       List<String> newList = new ArrayList<>();
 
       String top = list.get(0);
-      //System.out.println("top = [ " + top + " ]");
       if (top.startsWith("#")) {
         name = top.replaceAll("^# *", "");
       } else {

@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Test {
@@ -27,15 +28,30 @@ public class Test {
 
     //show(new File("./input/test1.txt"));
     //show(new File("./input/test2.txt"));
-    readLineFrom(new File("./input/test3.csv"))
-      .ifPresent(line -> {
+    //show(new File("./input/test3.csv"));
 
-        List<List<String>> paragraphList = splitWithParagraph(line);
-        List<List<String>> replacedList = replaceActorName(paragraphList);
-        List<List<String>> addedList = addActorName(replacedList);
-        showList(addedList);
+    try {
+      FormattableText ft = FormattableText.newInstanceFrom(new File("./input/test3.csv"));
+      String text = ft
+        .addActorName()
+        .replaceActorName()
+        .joining()
+        .format()
+        .toString();
+      System.out.println(text);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-      });
+    //readLineFrom(new File("./input/test3.csv"))
+    //  .ifPresent(line -> {
+
+    //    List<List<String>> paragraphList = splitWithParagraph(line);
+    //    List<List<String>> replacedList = replaceActorName(paragraphList);
+    //    List<List<String>> addedList = addActorName(replacedList);
+    //    //showList(addedList);
+
+    //  });
 
   }//}}}
 
@@ -98,9 +114,11 @@ public class Test {
   }//}}}
 
   private static void showList(List<List<String>> list) {
+    AtomicInteger atom = new AtomicInteger(0);
     list.stream().forEach(l -> {
+      atom.getAndIncrement();
       l.stream().forEach(s -> {
-        System.out.println(s);
+        System.out.println("line" + atom.get() + " : " + s);
       });
     });
   }
