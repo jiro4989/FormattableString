@@ -34,8 +34,8 @@ public class Test {
       FormattableText ft = FormattableText.newInstanceFrom(new File("./input/test3.csv"));
       String text = ft
         .addActorName()
-        .formatPutBrackets()
         .replaceActorName()
+        .formatPutBrackets()
         //.joining()
         .formatCarriageReturn()
         .toString();

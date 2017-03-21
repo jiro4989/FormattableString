@@ -109,8 +109,9 @@ public class FormattableText {
         list.stream()
           .filter(s -> !s.startsWith("#"))
           .forEach(s -> {
-            if (atom.getAndIncrement() != 0)
+            if (atom.getAndIncrement() != 0 && indentOption) {
               s = indent + s;
+            }
             List<String> crl = createCarriageReturnedListWith(s);
             newList.addAll(crl);
           });
