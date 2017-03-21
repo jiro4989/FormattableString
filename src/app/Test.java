@@ -34,24 +34,15 @@ public class Test {
       FormattableText ft = FormattableText.newInstanceFrom(new File("./input/test3.csv"));
       String text = ft
         .addActorName()
+        .formatPutBrackets()
         .replaceActorName()
-        .joining()
-        .format()
+        //.joining()
+        .formatCarriageReturn()
         .toString();
       System.out.println(text);
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    //readLineFrom(new File("./input/test3.csv"))
-    //  .ifPresent(line -> {
-
-    //    List<List<String>> paragraphList = splitWithParagraph(line);
-    //    List<List<String>> replacedList = replaceActorName(paragraphList);
-    //    List<List<String>> addedList = addActorName(replacedList);
-    //    //showList(addedList);
-
-    //  });
 
   }//}}}
 

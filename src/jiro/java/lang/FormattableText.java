@@ -33,7 +33,7 @@ public class FormattableText {
       .collect(Collectors.toList());
 
     br.close();
-    List<List<String>> listList = splitWithParagraph(list);
+    List<List<String>> listList = splitToParagraphFrom(list);
     return new FormattableText(listList);
   }//}}}
 
@@ -87,22 +87,34 @@ public class FormattableText {
     return new FormattableText(newList);
   }//}}}
 
-  private final int returnSize = 27 * 2;
+  // 一時変数
+  private final int returnSize       = 27 * 2;
   private final boolean indentOption = true;
-  private final String indent = "    ";
+  private final Brackets brackets    = Brackets.TYPE1;
+  private final String indent        = "  ";
 
-  public FormattableText format() {//{{{
-    List<List<String>> formedList =  textList.stream()
+  public FormattableText formatCarriageReturn() {//{{{
+    List<List<String>> formedList = textList.stream()
       .map(list -> {
         List<String> newList = new ArrayList<>();
-        list.stream().forEach(s -> {
-          if (s.startsWith("#")) {
+
+        list.stream()
+          .filter(s -> s.startsWith("#"))
+          .findFirst()
+          .ifPresent(s -> {
             newList.add(s);
-          } else {
-            List<String> crl = createCarriageReturnedList(s);
+          });
+
+        AtomicInteger atom = new AtomicInteger(0);
+        list.stream()
+          .filter(s -> !s.startsWith("#"))
+          .forEach(s -> {
+            if (atom.getAndIncrement() != 0)
+              s = indent + s;
+            List<String> crl = createCarriageReturnedListWith(s);
             newList.addAll(crl);
-          }
-        });
+          });
+
         return newList;
       })
     .collect(Collectors.toList());
@@ -110,12 +122,51 @@ public class FormattableText {
     return new FormattableText(formedList);
   }//}}}
 
-  private List<String> createCarriageReturnedList(String text) {//{{{
+  public FormattableText formatPutBrackets() {//{{{
+    List<List<String>> formedList = textList.stream()
+      .map(this::createWrappedListWith)
+      .collect(Collectors.toList());
+
+    return new FormattableText(formedList);
+  }//}}}
+
+  public void show() {//{{{
+    AtomicInteger atom = new AtomicInteger(0);
+    textList.stream().forEach(l -> {
+      atom.getAndIncrement();
+
+      l.stream().forEach(s -> {
+        int paragraphNumber = atom.get();
+        System.out.println(String.format("paragraph %03d : %s", paragraphNumber, s));
+      });
+    });
+  }//}}}
+
+  // private methods
+
+  private static List<List<String>> splitToParagraphFrom(List<String> list) {//{{{
+    List<List<String>> paragraphList = new ArrayList<>();
+    List<String> paragraph = new ArrayList<>();
+
+    for (String line : list) {
+      if (line.length() <= 0) {
+        if (0 < paragraph.size())
+          paragraphList.add(paragraph);
+        paragraph = new ArrayList<>();
+        continue;
+      }
+      paragraph.add(line);
+    }
+
+    return paragraphList;
+  }//}}}
+
+  private List<String> createCarriageReturnedListWith(String text) {//{{{
     List<String> newList = new ArrayList<>();
 
     List<String> wordList = splitToWord(text);
-    int count = indentOption ? stringLength(indent) : 0;
-    StringBuilder sb = new StringBuilder(indentOption ? indent : "");
+    int count = 0;
+    StringBuilder sb = new StringBuilder();
 
     for (String word : wordList) {
       int length = stringLength(word);
@@ -165,35 +216,40 @@ public class FormattableText {
     return nl;
   }//}}}
 
-  public void show() {//{{{
-    AtomicInteger atom = new AtomicInteger(0);
-    textList.stream().forEach(l -> {
-      atom.getAndIncrement();
-
-      l.stream().forEach(s -> {
-        int paragraphNumber = atom.get();
-        System.out.println(String.format("paragraph %03d : %s", paragraphNumber, s));
+  private List<String> createWrappedListWith(List<String> list) {//{{{
+    List<String> newList = new ArrayList<>();
+    list.stream()
+      .filter(s -> s.startsWith("#"))
+      .findFirst()
+      .ifPresent(actor -> {
+        newList.add(actor);
       });
-    });
-  }//}}}
 
-  // private methods
+    List<String> filteredList = list.stream()
+      .filter(s -> !s.startsWith("#"))
+      .collect(Collectors.toList());
 
-  private static List<List<String>> splitWithParagraph(List<String> list) {//{{{
-    List<List<String>> paragraphList = new ArrayList<>();
-    List<String> paragraph = new ArrayList<>();
+    int i = 0;
+    int listSize = filteredList.size();
 
-    for (String line : list) {
-      if (line.length() <= 0) {
-        if (0 < paragraph.size())
-          paragraphList.add(paragraph);
-        paragraph = new ArrayList<>();
-        continue;
+    for (String str : filteredList) {
+      if (i == 0) {
+        str = brackets.START + str;
       }
-      paragraph.add(line);
+
+      if (listSize - 1 <= i) {
+        //String end = brackets.END;
+        //List<String> tmpList = createCarriageReturnedListWith(str + end);
+        //newList.addAll(tmpList);
+        //continue;
+        str += brackets.END;
+      }
+
+      newList.add(str);
+      i++;
     }
 
-    return paragraphList;
+    return newList;
   }//}}}
 
   @Override
