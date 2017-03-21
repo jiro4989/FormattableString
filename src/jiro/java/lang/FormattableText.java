@@ -88,7 +88,7 @@ public class FormattableText {
   }//}}}
 
   private final int returnSize = 27 * 2;
-  private final boolean indentOption = false;
+  private final boolean indentOption = true;
   private final String indent = "    ";
 
   public FormattableText format() {//{{{
@@ -96,8 +96,12 @@ public class FormattableText {
       .map(list -> {
         List<String> newList = new ArrayList<>();
         list.stream().forEach(s -> {
-          List<String> crl = createCarriageReturnedList(s);
-          newList.addAll(crl);
+          if (s.startsWith("#")) {
+            newList.add(s);
+          } else {
+            List<String> crl = createCarriageReturnedList(s);
+            newList.addAll(crl);
+          }
         });
         return newList;
       })
@@ -110,8 +114,8 @@ public class FormattableText {
     List<String> newList = new ArrayList<>();
 
     List<String> wordList = splitToWord(text);
-    int count = 0;
-    StringBuilder sb = new StringBuilder();
+    int count = indentOption ? stringLength(indent) : 0;
+    StringBuilder sb = new StringBuilder(indentOption ? indent : "");
 
     for (String word : wordList) {
       int length = stringLength(word);
