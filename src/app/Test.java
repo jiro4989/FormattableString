@@ -38,6 +38,7 @@ public class Test {
         .formatPutBrackets()
         //.joining()
         .formatCarriageReturn()
+        .splitToParagraph()
         .toString();
       System.out.println(text);
     } catch (IOException e) {

@@ -58,6 +58,38 @@ public class FormattableText {
     return new FormattableText(newListList);
   }//}}}
 
+  public FormattableText splitToParagraph() {//{{{
+    List<List<String>> newListList = new ArrayList<>();
+
+    textList.stream().forEach(l -> {
+      if (l.size() <= 4) {
+        newListList.add(l);
+      } else {
+        List<String> newList = new ArrayList<>();
+        for (int i=1; i<=l.size(); i++) {
+          newList.add(l.get(i-1));
+          if (i % 4 == 0) {
+            newListList.add(newList);
+            newList = new ArrayList<>();
+          }
+        }
+        newListList.add(newList);
+        //AtomicInteger atom = new AtomicInteger(0);
+        //l.stream().forEach(s -> {
+        //  int count = atom.incrementAndGet();
+        //  newList.add(s);
+        //  if (4 <= count) {
+        //    newListList.add(newList);
+        //    atom.set(0);
+        //    newList.clear();
+        //  }
+        //});
+      }
+    });
+
+    return new FormattableText(newListList);
+  }//}}}
+
   public FormattableText replaceActorName() {//{{{
     List<List<String>> newListList = new ArrayList<>();
 
@@ -93,6 +125,14 @@ public class FormattableText {
   private final Brackets brackets    = Brackets.TYPE1;
   private final String indent        = "  ";
 
+  public FormattableText formatPutBrackets() {//{{{
+    List<List<String>> formedList = textList.stream()
+      .map(this::createWrappedListWith)
+      .collect(Collectors.toList());
+
+    return new FormattableText(formedList);
+  }//}}}
+
   public FormattableText formatCarriageReturn() {//{{{
     List<List<String>> formedList = textList.stream()
       .map(list -> {
@@ -119,14 +159,6 @@ public class FormattableText {
         return newList;
       })
     .collect(Collectors.toList());
-
-    return new FormattableText(formedList);
-  }//}}}
-
-  public FormattableText formatPutBrackets() {//{{{
-    List<List<String>> formedList = textList.stream()
-      .map(this::createWrappedListWith)
-      .collect(Collectors.toList());
 
     return new FormattableText(formedList);
   }//}}}
