@@ -2,6 +2,8 @@ package app;
 
 import jiro.java.lang.*;
 
+import static jiro.java.lang.UtilsString.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -23,8 +25,17 @@ public class Test {
 
   public static void main(String... args) {//{{{
 
-    show(new File("./input/test1.txt"));
-    show(new File("./input/test2.txt"));
+    //show(new File("./input/test1.txt"));
+    //show(new File("./input/test2.txt"));
+    readLineFrom(new File("./input/test3.csv"))
+      .ifPresent(line -> {
+
+        List<List<String>> paragraphList = splitWithParagraph(line);
+        List<List<String>> replacedList = replaceActorName(paragraphList);
+        List<List<String>> addedList = addActorName(replacedList);
+        showList(addedList);
+
+      });
 
   }//}}}
 
@@ -85,5 +96,13 @@ public class Test {
     System.out.println(sb.toString());
 
   }//}}}
+
+  private static void showList(List<List<String>> list) {
+    list.stream().forEach(l -> {
+      l.stream().forEach(s -> {
+        System.out.println(s);
+      });
+    });
+  }
 
 }

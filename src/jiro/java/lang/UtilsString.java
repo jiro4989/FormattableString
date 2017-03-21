@@ -170,4 +170,96 @@ public class UtilsString {
 
   }//}}}
 
+  public static Optional<List<String>> readLineFrom(File file) {//{{{
+
+    Path path = file.toPath();
+    try (BufferedReader br = Files.newBufferedReader(path, Charset.forName("UTF-8"))) {
+
+      List<String> list = br.lines()
+        .filter(s -> !s.startsWith("##"))
+        .collect(Collectors.toList());
+      return Optional.ofNullable(list);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return Optional.empty();
+
+  }//}}}
+
+  public static List<List<String>> splitWithParagraph(List<String> list) {//{{{
+
+    List<List<String>> paragraphList = new ArrayList<>();
+    List<String> paragraph = new ArrayList<>();
+    for (String line : list) {
+
+      if (line.length() <= 0) {
+
+        if (0 < paragraph.size())
+          paragraphList.add(paragraph);
+        paragraph = new ArrayList<>();
+        continue;
+
+      }
+
+      paragraph.add(line);
+
+    }
+
+    return paragraphList;
+
+  }//}}}
+
+  public static List<List<String>> replaceActorName(List<List<String>> list) {//{{{
+
+    List<List<String>> newListList = new ArrayList<>();
+    for (List<String> l : list) {
+
+      List<String> newList = new ArrayList<>();
+      String name = "";
+      for (String line : l) {
+
+        if (line.startsWith("#")) {
+          name = line.replaceAll("^# *", "");
+        }
+
+        String newLine = line.replaceAll("@name", name);
+        newList.add(newLine);
+
+      }
+      newListList.add(newList);
+
+    }
+
+    return newListList;
+
+  }//}}}
+
+  public static List<List<String>> addActorName(List<List<String>> listList) {//{{{
+
+    List<List<String>> newListList = new ArrayList<>();
+
+    String name = "";
+    for (List<String> list : listList) {
+
+      List<String> newList = new ArrayList<>();
+
+      String top = list.get(0);
+      //System.out.println("top = [ " + top + " ]");
+      if (top.startsWith("#")) {
+        name = top.replaceAll("^# *", "");
+      } else {
+        newList.add("# " + name);
+      }
+
+      newList.addAll(list);
+      newListList.add(newList);
+
+    }
+
+    return newListList;
+
+  }//}}}
+
 }
