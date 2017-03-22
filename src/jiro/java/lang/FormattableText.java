@@ -127,7 +127,9 @@ public class FormattableText {
     this.returnSize     = builder.returnSize;
     this.indentOption   = builder.indentOption;
     this.indentSize     = builder.indentSize;
-    this.indent         = createIndentString(indentSize);
+    this.indent         = createIndentString(
+        builder.bracketsOption ? stringLength(builder.brackets.START) : builder.indentSize
+        );
     this.bracketsOption = builder.bracketsOption;
     this.brackets       = builder.brackets;
     this.joiningOption  = builder.joiningOption;
@@ -220,41 +222,47 @@ public class FormattableText {
   }//}}}
 
   public FormattableText formatPutBrackets() {//{{{
-    List<List<String>> formedList = textList.stream()
-      .map(this::createWrappedListWith)
-      .collect(Collectors.toList());
+    if (bracketsOption) {
+      List<List<String>> formedList = textList.stream()
+        .map(this::createWrappedListWith)
+        .collect(Collectors.toList());
 
-    return new FormattableText.Builder(this, formedList).build();
+      return new FormattableText.Builder(this, formedList).build();
+    }
+    return this;
   }//}}}
 
   public FormattableText formatCarriageReturn() {//{{{
-    List<List<String>> formedList = textList.stream()
-      .map(list -> {
-        List<String> newList = new ArrayList<>();
+    if (returnOption) {
+      List<List<String>> formedList = textList.stream()
+        .map(list -> {
+          List<String> newList = new ArrayList<>();
 
-        list.stream()
-          .filter(s -> s.startsWith("#"))
-          .findFirst()
-          .ifPresent(s -> {
-            newList.add(s);
-          });
+          list.stream()
+            .filter(s -> s.startsWith("#"))
+            .findFirst()
+            .ifPresent(s -> {
+              newList.add(s);
+            });
 
-        AtomicInteger atom = new AtomicInteger(0);
-        list.stream()
-          .filter(s -> !s.startsWith("#"))
-          .forEach(s -> {
-            if (atom.getAndIncrement() != 0 && indentOption) {
-              s = indent + s;
-            }
-            List<String> crl = createCarriageReturnedListWith(s);
-            newList.addAll(crl);
-          });
+          AtomicInteger atom = new AtomicInteger(0);
+          list.stream()
+            .filter(s -> !s.startsWith("#"))
+            .forEach(s -> {
+              if (atom.getAndIncrement() != 0 && indentOption) {
+                s = indent + s;
+              }
+              List<String> crl = createCarriageReturnedListWith(s);
+              newList.addAll(crl);
+            });
 
-        return newList;
-      })
-    .collect(Collectors.toList());
+          return newList;
+        })
+      .collect(Collectors.toList());
 
-    return new FormattableText.Builder(this, formedList).build();
+      return new FormattableText.Builder(this, formedList).build();
+    }
+    return this;
   }//}}}
 
   public void show() {//{{{

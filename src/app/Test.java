@@ -25,13 +25,15 @@ public class Test {
   // test code
 
   public static void main(String... args) {//{{{
+    show(new File("./input/test2.csv"));
+    show(new File("./input/test3.csv"));
+  }//}}}
 
-    //show(new File("./input/test1.txt"));
-    //show(new File("./input/test2.txt"));
-    //show(new File("./input/test3.csv"));
+  // test methods
 
+  private static void show(File file) {
     try {
-      FormattableText ft = new FormattableText.Builder(new File("./input/test3.csv"))
+      FormattableText ft = new FormattableText.Builder(file)
         .returnOption(true)
         .returnSize(RETURN_SIZE)
         .indentOption(true)
@@ -46,75 +48,6 @@ public class Test {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-  }//}}}
-
-  // test methods
-
-  private static void show(File file) {//{{{
-
-    UtilsString.readTextFrom(file).ifPresent(text -> {
-
-      FormattableString fs = new FormattableString.Builder(text)
-        .returnOption(true)
-        .returnSize(RETURN_SIZE)
-        .indentOption(true)
-        .indentSize(INDENT_SIZE)
-        .bracketsOption(true)
-        .bracketsType(BRACKETS)
-        .actorNameOption(true)
-        .actorName(ACTOR)
-        .actorNameType(ActorNameType.ALL_WINDOW)
-        .build();
-      showText(fs);
-
-    });
-
-  }//}}}
-
-  private static void showText(FormattableString fs) {//{{{
-
-    showLine();
-    System.out.println("変換前のテキスト");
-    showLine();
-
-    String newString = fs
-      .toString();
-
-    System.out.println(newString);
-    System.out.println("");
-
-    showLine();
-    System.out.println("変換後のテキスト");
-    showLine();
-
-    newString = fs
-      .format()
-      .toString();
-
-    System.out.println(newString);
-    System.out.println("");
-
-  }//}}}
-
-  private static void showLine() {//{{{
-
-    StringBuilder sb = new StringBuilder();
-    for (int i=0; i<RETURN_SIZE; i++) {
-      sb.append('*');
-    }
-    System.out.println(sb.toString());
-
-  }//}}}
-
-  private static void showList(List<List<String>> list) {
-    AtomicInteger atom = new AtomicInteger(0);
-    list.stream().forEach(l -> {
-      atom.getAndIncrement();
-      l.stream().forEach(s -> {
-        System.out.println("line" + atom.get() + " : " + s);
-      });
-    });
   }
 
 }
