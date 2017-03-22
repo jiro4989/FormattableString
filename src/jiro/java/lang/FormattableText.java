@@ -10,11 +10,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static java.util.stream.IntStream.range;
 
+/**
+ * <p>
+ * 整形可能なテキストクラス。
+ * </p><p>
+ * このクラスは不変クラスである。
+ * </p>
+ */
 public class FormattableText {
 
   private final List<List<String>> textList;
