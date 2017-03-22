@@ -31,15 +31,17 @@ public class Test {
     //show(new File("./input/test3.csv"));
 
     try {
-      FormattableText ft = FormattableText.newInstanceFrom(new File("./input/test3.csv"));
-      String text = ft
-        .addActorName()
-        .replaceActorName()
-        .formatPutBrackets()
-        //.joining()
-        .formatCarriageReturn()
-        .splitToParagraph()
-        .toString();
+      FormattableText ft = new FormattableText.Builder(new File("./input/test3.csv"))
+        .returnOption(true)
+        .returnSize(RETURN_SIZE)
+        .indentOption(true)
+        .indentSize(INDENT_SIZE)
+        .bracketsOption(true)
+        .brackets(BRACKETS)
+        .joiningOption(false)
+        .build();
+
+      String text = ft.format().toString();
       System.out.println(text);
     } catch (IOException e) {
       e.printStackTrace();
