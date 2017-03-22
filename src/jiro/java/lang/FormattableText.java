@@ -363,10 +363,6 @@ public class FormattableText {
       }
 
       if (listSize - 1 <= i) {
-        //String end = brackets.END;
-        //List<String> tmpList = createCarriageReturnedListWith(str + end);
-        //newList.addAll(tmpList);
-        //continue;
         str += brackets.END;
       }
 
