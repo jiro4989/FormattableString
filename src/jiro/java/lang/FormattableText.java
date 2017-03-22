@@ -19,7 +19,9 @@ import static java.util.stream.IntStream.range;
  * <p>
  * 整形可能なテキストクラス。
  * </p><p>
- * このクラスは不変クラスである。
+ * このクラスは不変クラスである。<br>
+ * Getterは常に新しいインスタンスを生成して返却するため、
+ * Getterの値を変更してもこのインスタンスのフィールドは変化しない。
  * </p>
  */
 public class FormattableText {
@@ -407,6 +409,23 @@ public class FormattableText {
     br.close();
     List<List<String>> listList = splitToParagraphFrom(list);
     return listList;
+  }//}}}
+
+  // Getter
+
+  /**
+   * <p>
+   * 保持するテキストリストのコピーを返却する。<br>
+   * </p><p>
+   * これは参照ではなく、新しいインスタンスを返却することを意味する。
+   * </p><p>
+   * つまり、このGetterによって取得したインスタンスの値を変更しても、
+   * このFormattableTextインスタンスのフィールドの値が変更されないことを意味する
+   * 。
+   * </p>
+   */
+  public List<List<String>> getTextList() {//{{{
+    return new ArrayList<List<String>>(textList);
   }//}}}
 
   @Override
