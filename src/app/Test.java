@@ -34,13 +34,13 @@ public class Test {
   private static void show(File file) {
     try {
       FormattableText ft = new FormattableText.Builder(file)
-        .returnOption(true)
-        .returnSize(RETURN_SIZE)
-        .indentOption(true)
-        .indentSize(INDENT_SIZE)
-        .bracketsOption(true)
-        .brackets(BRACKETS)
-        .joiningOption(false)
+        //.returnOption(true)
+        //.returnSize(RETURN_SIZE)
+        //.indentOption(true)
+        //.indentSize(INDENT_SIZE)
+        //.bracketsOption(true)
+        //.brackets(BRACKETS)
+        //.joiningOption(false)
         .build();
 
       String text = ft.format().toString();

@@ -51,7 +51,7 @@ public class FormattableText {
     private int returnSize = 27 * 2;
 
     private boolean indentOption = false;
-    private int indentSize = -256;
+    private int indentSize = 0;
 
     private boolean bracketsOption = false;
     private Brackets brackets = null;
