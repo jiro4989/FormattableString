@@ -14,7 +14,7 @@
   <property name="build.dist.dir"    value="dist"/>
   <property name="build.main.class"  value="app.Test"/>
   <property name="jar.name"          value="mvte.jar"/>
-  <property name="lib.name"          value="formattable-text-1.0.1.jar"/>
+  <property name="lib.name"          value="formattable-text-1.0.2.jar"/>
 
   <!--}}}-->
 

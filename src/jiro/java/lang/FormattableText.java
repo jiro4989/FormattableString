@@ -286,6 +286,17 @@ public class FormattableText {
     });
   }//}}}
 
+  /**
+   * 渡された数値からインデント文字列を生成する。
+   * @param size インデントサイズ
+   * @return インデント文字列
+   */
+  public static String createIndentString(int size) {//{{{
+    StringBuilder sb = new StringBuilder(size);
+    range(0, size).forEach(i -> sb.append(" "));
+    return sb.toString();
+  }//}}}
+
   // private methods
 
   private List<String> createCarriageReturnedListWith(String text) {//{{{
@@ -392,12 +403,6 @@ public class FormattableText {
     return paragraphList;
   }//}}}
 
-  private static String createIndentString(int size) {//{{{
-    StringBuilder sb = new StringBuilder(size);
-    range(0, size).forEach(i -> sb.append(" "));
-    return sb.toString();
-  }//}}}
-
   private static List<List<String>> createParagraphListFrom(File file) throws IOException {//{{{
     Path path = file.toPath();
     BufferedReader br = Files.newBufferedReader(path, Charset.forName("UTF-8"));
@@ -423,6 +428,7 @@ public class FormattableText {
    * このFormattableTextインスタンスのフィールドの値が変更されないことを意味する
    * 。
    * </p>
+   * @return 保持するテキストリストの新しいインスタンス
    */
   public List<List<String>> getTextList() {//{{{
     return new ArrayList<List<String>>(textList);
