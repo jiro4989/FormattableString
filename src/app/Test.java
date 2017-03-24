@@ -25,22 +25,23 @@ public class Test {
   // test code
 
   public static void main(String... args) {//{{{
-    show(new File("./input/test2.csv"));
-    show(new File("./input/test3.csv"));
+    //show(new File("./input/test2.csv"));
+    show(new File("./input/test3.txt"));
   }//}}}
 
   // test methods
 
-  private static void show(File file) {
+  private static void show(File file) {//{{{
     try {
       FormattableText ft = new FormattableText.Builder(file)
-        //.returnOption(true)
-        //.returnSize(RETURN_SIZE)
-        //.indentOption(true)
-        //.indentSize(INDENT_SIZE)
-        //.bracketsOption(true)
-        //.brackets(BRACKETS)
-        //.joiningOption(false)
+        .actorNameOption(true)
+        .returnOption(true)
+        .returnSize(RETURN_SIZE)
+        .indentOption(true)
+        .indentSize(INDENT_SIZE)
+        .bracketsOption(true)
+        .brackets(BRACKETS)
+        .joiningOption(false)
         .build();
 
       String text = ft.format().toString();
@@ -48,6 +49,6 @@ public class Test {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
+  }//}}}
 
 }

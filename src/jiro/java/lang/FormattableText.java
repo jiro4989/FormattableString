@@ -29,6 +29,8 @@ public class FormattableText {
   private final List<List<String>> textList;
   private static final String SEP = System.lineSeparator();
 
+  private final boolean actorNameOption;
+
   private final boolean returnOption;
   private final int returnSize;
 
@@ -46,6 +48,8 @@ public class FormattableText {
   public static class Builder {//{{{
 
     private final List<List<String>> textList;
+
+    private boolean actorNameOption = false;
 
     private boolean returnOption = false;
     private int returnSize = 27 * 2;
@@ -80,6 +84,11 @@ public class FormattableText {
     }//}}}
 
     // option methods
+
+    public Builder actorNameOption(boolean bool) {//{{{
+      this.actorNameOption = bool;
+      return this;
+    }//}}}
 
     public Builder returnOption(boolean bool) {//{{{
       this.returnOption = bool;
@@ -131,17 +140,18 @@ public class FormattableText {
   // private constructor
 
   private FormattableText(Builder builder) {//{{{
-    this.textList       = builder.textList;
-    this.returnOption   = builder.returnOption;
-    this.returnSize     = builder.returnSize;
-    this.indentOption   = builder.indentOption;
-    this.indentSize     = builder.indentSize;
-    this.indent         = createIndentString(
+    this.textList        = builder.textList;
+    this.actorNameOption = builder.actorNameOption;
+    this.returnOption    = builder.returnOption;
+    this.returnSize      = builder.returnSize;
+    this.indentOption    = builder.indentOption;
+    this.indentSize      = builder.indentSize;
+    this.indent          = createIndentString(
         builder.bracketsOption ? stringLength(builder.brackets.START) : builder.indentSize
         );
-    this.bracketsOption = builder.bracketsOption;
-    this.brackets       = builder.brackets;
-    this.joiningOption  = builder.joiningOption;
+    this.bracketsOption  = builder.bracketsOption;
+    this.brackets        = builder.brackets;
+    this.joiningOption   = builder.joiningOption;
   }//}}}
 
   // public methods
@@ -152,28 +162,33 @@ public class FormattableText {
       .formatPutBrackets()
       .joining()
       .formatCarriageReturn()
-      .splitToParagraph();
+      .splitToParagraph()
+      .deleteEmptyList();
   }//}}}
 
   public FormattableText addActorName() {//{{{
-    List<List<String>> newListList = new ArrayList<>();
+    if (actorNameOption) {
+      List<List<String>> newListList = new ArrayList<>();
 
-    String name = "";
-    for (List<String> list : textList) {
-      List<String> newList = new ArrayList<>();
+      String name = "";
+      for (List<String> list : textList) {
+        List<String> newList = new ArrayList<>();
 
-      String top = list.get(0);
-      if (top.startsWith("#")) {
-        name = top.replaceAll("^# *", "");
-      } else {
-        newList.add("# " + name);
+        String top = list.get(0);
+        if (top.startsWith("#")) {
+          name = top.replaceAll("^# *", "");
+        } else {
+          newList.add("# " + name);
+        }
+
+        newList.addAll(list);
+        newListList.add(newList);
       }
 
-      newList.addAll(list);
-      newListList.add(newList);
+      return new FormattableText.Builder(this, newListList).build();
     }
 
-    return new FormattableText.Builder(this, newListList).build();
+    return this;
   }//}}}
 
   public FormattableText splitToParagraph() {//{{{
@@ -273,6 +288,16 @@ public class FormattableText {
     }
     return this;
   }//}}}
+
+  /**
+   * 空のリストを削除する。
+   */
+  public FormattableText deleteEmptyList() {
+    List<List<String>> listList = textList.stream()
+      .filter(l -> l.size() != 0)
+      .collect(Collectors.toList());
+    return new FormattableText.Builder(this, listList).build();
+  }
 
   public void show() {//{{{
     AtomicInteger atom = new AtomicInteger(0);
